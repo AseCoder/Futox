@@ -1,23 +1,22 @@
-console.log('- Starting FutoX & Musix -');
+console.log('- Starting FutoX -');
 const dotenv = require('dotenv');
 require('dotenv/config');
 const Discord = require('discord.js');
-const futox = new Discord.Client({ disableEveryone: true });
+const client = new Discord.Client({ disableEveryone: true });
 const DBL = require("dblapi.js");
-const minex = new Discord.Client();
 const fs = require('fs');
 const firebase = require('firebase/app');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccount.json');
-const futoxdbl = new DBL(process.env.FUTOX_DBLTOKEN, futox);
+const dbl = new DBL(process.env.DBLTOKEN, client);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-futox.db = admin.firestore();
-futox.db.FieldValue = require('firebase-admin').firestore.FieldValue;
-futox.global = {
+client.db = admin.firestore();
+client.db.FieldValue = require('firebase-admin').firestore.FieldValue;
+client.global = {
   lastDBwrite: undefined,
   pings: [],
   core_devs: [
@@ -67,83 +66,83 @@ futox.global = {
   },
 };
 
-futox.config = {
-  token: process.env.FUTOX_TOKEN,
+client.config = {
+  token: process.env.TOKEN,
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
-  futox.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
+  client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
 } else {
-  futox.global.locally_hosted = false;
+  client.global.locally_hosted = false;
 }
-futox.funcs = {};
-futox.colors = {
+client.funcs = {};
+client.colors = {
   botGold: '#FFBD06',
 };
-futox.npm = {
+client.npm = {
   ms: require('ms'),
   weather: require('weather-js'),
   moment: require('moment'),
   fs: require('fs'),
 };
-futox.commands = new Discord.Collection();
-const commandNames = fs.readdirSync('./futox_commands').filter(f => f.endsWith('.js'));
+client.commands = new Discord.Collection();
+const commandNames = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
 
 for (const filename of commandNames) {
-  const command = require(`./futox_commands/${filename}`);
-  futox.commands.set(command.name, command);
+  const command = require(`./commands/${filename}`);
+  client.commands.set(command.name, command);
 }
 console.log('- FutoX Commands Loaded -');
 
-futox.on("guildMemberUpdate", (oldMember, newMember) => {
-  require('./futox_events/guildMemberUpdate.js').run({ futox, Discord, newMember });
+client.on("guildMemberUpdate", (oldMember, newMember) => {
+  require('./events/guildMemberUpdate.js').run({ futox: client, Discord, newMember });
 });
 
-futox.on('guildMemberAdd', (member) => {
-  require('./futox_events/guildMemberAdd.js').run({ futox, Discord, member });
+client.on('guildMemberAdd', (member) => {
+  require('./events/guildMemberAdd.js').run({ futox: client, Discord, member });
 });
 
-futox.on('messageUpdate', async (oldMessage, newMessage) => {
-  require('./futox_events/messageUpdate.js').run({ futox, Discord, newMessage });
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+  require('./events/messageUpdate.js').run({ futox: client, Discord, newMessage });
 });
 
-futox.on('guildMemberRemove', async (member) => {
-  require('./futox_events/guildMemberRemove.js').run({ futox, Discord, member });
+client.on('guildMemberRemove', async (member) => {
+  require('./events/guildMemberRemove.js').run({ futox: client, Discord, member });
 });
 
-futox.on('raw', async (event) => {
+client.on('raw', async (event) => {
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(event.t)) return;
-  require('./futox_events/raw.js').run({ futox, Discord, event });
+  require('./events/raw.js').run({ futox: client, Discord, event });
 });
 
-futox.on('guildCreate', async (guild) => {
-  require('./futox_events/guildCreate.js').run({ futox, Discord, guild });
+client.on('guildCreate', async (guild) => {
+  require('./events/guildCreate.js').run({ futox: client, Discord, guild });
 });
 
-futox.on('guildDelete', async (guild) => {
-  require('./futox_events/guildDelete.js').run({ futox, Discord, guild });
+client.on('guildDelete', async (guild) => {
+  require('./events/guildDelete.js').run({ futox: client, Discord, guild });
 });
 
-futox.on('ready', async () => {
-  require('./futox_events/ready.js').run({ futox, Discord, futoxdbl });
+client.on('ready', async () => {
+  require('./events/ready.js').run({ futox: client, Discord, futoxdbl: dbl });
 });
 
-futox.on('message', async (message) => {
-  require('./futox_events/message.js').run(futox, Discord, message);
+client.on('message', async (message) => {
+  require('./events/message.js').run(client, Discord, message);
 });
 
-futoxdbl.on('posted', () => {
+dbl.on('posted', () => {
   console.log('FutoX server count posted!');
 })
 
-futoxdbl.on('error', error => {
+dbl.on('error', error => {
   console.log(`FutoX Error with DBL! ${error}`);
 })
 
-fs.readdirSync('./futox_funcs').forEach(filename => {
-  futox.funcs[filename.slice(0, -3)] = require(`./futox_funcs/${filename}`);
+fs.readdirSync('./funcs').forEach(filename => {
+  client.funcs[filename.slice(0, -3)] = require(`./funcs/${filename}`);
 });
 
-futox.funcs.incorrectUsage(futox);
+client.funcs.incorrectUsage(client);
 console.log('- FutoX Funcs Loaded -');
 
-futox.login(futox.config.token).catch(err => { console.log('- Futox Failed To Login -'); });
+client.login(client.config.token).catch(err => { console.log('- Futox Failed To Login -'); });
