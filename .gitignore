@@ -1,0 +1,6 @@
+.env
+serviceAccount.json
+package.json
+package-lock.json
+.vscode/
+node_modules/
