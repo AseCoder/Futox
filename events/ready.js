@@ -71,7 +71,7 @@ module.exports = {
     }, 1200000);
     setInterval(() => {
       futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
-      dbl.postStats(futox.guilds.size);
+      //dbl.postStats(futox.guilds.size);
     }, 1800000);
   },
 };
