@@ -4,7 +4,6 @@ module.exports = {
 	description: '[IN BETA] Create a graph of latest pings',
 	category: 'fun',
   async execute(msg, args, client, Discord) {
-    return msg.channel.send('this command is disabled.');
     const npmCanvas = client.npm.canvas;
     const canvas = npmCanvas.createCanvas(900, 400);
     const ctx = canvas.getContext('2d');
