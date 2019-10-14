@@ -46,27 +46,30 @@ module.exports = {
 
     console.log('- FutoX Activated -');
 
-    let pastDb = futox.global.db;
+    let pastDbJSON = JSON.stringify(futox.global.db);
     futox.unsaved_db = false;
     setInterval(async () => {
       futox.global.pings.push(futox.ping);
       if (futox.global.pings.length > 50) futox.global.pings.shift();
     }, 30000);
+    futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000
     setInterval(async () => {
-      if (pastDb !== futox.global.db) {
-        pastDb = futox.global.db;
-        futox.unsaved_db = true;
+      if (pastDbJSON !== JSON.stringify(futox.global.db)) {
+        pastDbJSON = JSON.stringify(futox.global.db);
+        futox.global.dbwrite.unsavedChanges = true;
       } else {
-        futox.unsaved_db = false;
+        futox.global.dbwrite.unsavedChanges = false;
       }
-      if (futox.unsaved_db) {
+      futox.global.dbwrite.lastAttempt.timestamp = Date.now();
+      futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000;
+      if (futox.global.dbwrite.unsavedChanges) {
+        futox.global.dbwrite.lastAttempt.success = true;
         futox.guilds.forEach(guild => {
           futox.db.collection('guilds').doc(guild.id).set(futox.global.db.guilds[guild.id]);
         });
         for (let i = 0; i < Object.keys(futox.global.db.specs).length; i++) {
           futox.db.collection('specs').doc(Object.keys(futox.global.db.specs)[i]).set(Object.values(futox.global.db.specs)[i]);
         }
-        futox.global.lastDBwrite = Date.now();
       }
     }, 1200000);
     setInterval(() => {
