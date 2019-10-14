@@ -118,6 +118,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
   require('./events/presenceUpdate.js').run({ futox: client, Discord, oldMember, newMember });
 });
 */
+client.on('roleDelete', async (role) => {
+  require('./events/roleDelete.js').run({ futox: client, role, Discord });
+});
+
 client.on('guildMemberRemove', async (member) => {
   require('./events/guildMemberRemove.js').run({ futox: client, Discord, member });
 });
