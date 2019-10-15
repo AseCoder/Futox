@@ -1,6 +1,6 @@
 module.exports = {
   run: async (client, Discord, message) => {
-    if (!message.guild || (message.author.bot && message.author.id !== client.user.id) || (!client.global.core_devs.map(x => x.id).includes(message.author.id) && client.user.id === '626825158145081352')) return;
+    if (!message.guild || (message.author.bot && message.author.id !== "542971464740241419") || (!client.global.core_devs.map(x => x.id).includes(message.author.id) && client.user.id === '626825158145081352')) return;
     const d = client.global.db.guilds[message.guild.id];
     if (d.mutes.map(x => x.id).includes(message.author.id)) {
       message.delete();
