@@ -17,7 +17,15 @@ admin.initializeApp({
 client.db = admin.firestore();
 client.db.FieldValue = require('firebase-admin').firestore.FieldValue;
 client.global = {
-  lastDBwrite: undefined,
+  lastOnline: {},
+  dbwrite: {
+    lastAttempt: {
+      success: undefined,
+      timestamp: undefined,
+    },
+    unsavedChanges: false,
+    nextAttemptTimestamp: undefined,
+  },
   pings: [],
   core_devs: [
     {
@@ -83,6 +91,7 @@ client.npm = {
   weather: require('weather-js'),
   moment: require('moment'),
   fs: require('fs'),
+  canvas: require('canvas'),
 };
 client.commands = new Discord.Collection();
 const commandNames = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
@@ -103,6 +112,14 @@ client.on('guildMemberAdd', (member) => {
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   require('./events/messageUpdate.js').run({ futox: client, Discord, newMessage });
+});
+/*
+client.on('presenceUpdate', async (oldMember, newMember) => {
+  require('./events/presenceUpdate.js').run({ futox: client, Discord, oldMember, newMember });
+});
+*/
+client.on('roleDelete', async (role) => {
+  require('./events/roleDelete.js').run({ futox: client, role, Discord });
 });
 
 client.on('guildMemberRemove', async (member) => {
