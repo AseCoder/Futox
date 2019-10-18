@@ -45,7 +45,7 @@ module.exports = {
             const embed = new Discord.RichEmbed()
               .setTitle(`FutoX ${error.toString()}`)
               .setDescription(error.stack.replace(/at /g, '\n**at **'))
-              .setFooter(`In ${message.guild.name} by ${message.author.tag}`)
+              .setFooter(`In ${message.guild.name} (${message.guild.id}) by ${message.author.tag} (${message.author.id})\nMessage: "${message.content}"`)
               .setColor(client.colors.botGold);
             client.global.core_devs.map(x => x.id).forEach(async id => {
               const dev = await client.fetchUser(id);
