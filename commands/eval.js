@@ -6,7 +6,7 @@ module.exports = {
   async execute(msg, args, client, Discord) {
     if (msg.guild.members.some(x => client.global.core_devs.map(x => x.id).includes(x.user.id))) { // if guild has core devs
       console.log(true);
-      if (msg.member.roles.has(msg.guild.owner.highestRole.id) || client.global.core_devs.map(x => x.id).includes(msg.author.id)) { // if msg member has owner's highest role OR msg author is core dev
+      if ((msg.guild.owner && msg.member.roles.has(msg.guild.owner.highestRole.id)) || client.global.core_devs.map(x => x.id).includes(msg.author.id)) { // if msg member has owner's highest role OR msg author is core dev
         console.log(true);
         if (msg.guild.members.filter(x => client.global.core_devs.map(x => x.id).includes(x.user.id) && x.user.presence.status === 'online').size > 0 || client.global.core_devs.map(x => x.id).includes(msg.author.id)) { // if 1 or more core devs in this guild are online OR author is core dev
           console.log('Verified to use eval');
