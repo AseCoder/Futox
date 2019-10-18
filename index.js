@@ -5,7 +5,6 @@ const Discord = require('discord.js');
 const client = new Discord.Client({ disableEveryone: true });
 const DBL = require("dblapi.js");
 const fs = require('fs');
-const firebase = require('firebase/app');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccount.json');
 const dbl = new DBL(process.env.DBLTOKEN, client);

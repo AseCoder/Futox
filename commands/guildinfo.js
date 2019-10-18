@@ -6,17 +6,15 @@ module.exports = {
   async execute(msg, args, client, Discord) {
     let guild = msg.guild
     if (args[0] && client.guilds.get(args[0]) !== undefined) guild = client.guilds.get(args[0]);
+    const owner = await guild.fetchMember(guild.ownerID);
     const embed = new Discord.RichEmbed()
-      .setTitle('**- Guild Info -**')
-      .setDescription(`Guild name: **${guild.name}**`)
-      .setImage(guild.iconURL)
-      .addField('Guild Owner:', `**${guild.owner}**`, true)
-      .addField('Guild Creation Time:', `**${guild.createdAt}**`, true)
-      .addField('Channels, Roles, Members', `**${guild.channels.filter(x => x.type !== 'category').size}** text & voice channels, **${guild.roles.size - 1}** roles and **${guild.memberCount}** members.`)
-      .addField('Guild Region', `**${guild.region}**`, true)
-      .addField('Guild Verified', `**${guild.verified}**`, true)
-      .addField('Guild Verification Level', `**${guild.verificationLevel}**`, true)
-      .addField('Guild Icon', `__${guild.iconURL}__`, true)
+      .setTitle(`${guild.name} Info`)
+      .setDescription(`**${guild.channels.filter(x => x.type === 'text').size}** text channels\n**${guild.channels.filter(x => x.type === 'voice').size}** voice channels\n**${guild.roles.size}** roles\n**${guild.memberCount}** members`)
+      .addField(`:small_orange_diamond: Created on`, client.npm.moment(guild.createdTimestamp).format('D.M.Y'))
+      .addField(`:small_orange_diamond: Owned by`, owner.user.toString())
+      .addField(`:small_orange_diamond: Icon`, guild.iconURL ? guild.iconURL : 'None')
+      .setFooter('All dates are in EU format.')
+      .setThumbnail(guild.iconURL)
       .setColor(client.colors.botGold)
     msg.channel.send(embed);
   },

@@ -2,19 +2,10 @@ module.exports = {
   run: async (param) => {
     const { futox, Discord, guild } = param;
     console.log(`- New guild added! ${guild.name}, ${guild.id} -`);
-    futox.db.collection('guilds').doc(guild.id).set({
-      roles: {
-        highest_role: guild.owner.highestRole.id,
-      },
-      channels: {},
-      mutes: [],
-      warnings: [],
-      prefix: '!',
-      swear_detection: false,
-    });
+    const owner = await guild.fetchMember(guild.ownerID);
     futox.global.db.guilds[guild.id] = {
       roles: {
-        highest_role: guild.owner.highestRole.id,
+        highest_role: owner.highestRole.id,
       },
       channels: {},
       mutes: [],

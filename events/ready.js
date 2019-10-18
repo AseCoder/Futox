@@ -70,6 +70,8 @@ module.exports = {
         for (let i = 0; i < Object.keys(futox.global.db.specs).length; i++) {
           futox.db.collection('specs').doc(Object.keys(futox.global.db.specs)[i]).set(Object.values(futox.global.db.specs)[i]);
         }
+      } else {
+        futox.global.dbwrite.lastAttempt.success = false;
       }
     }, 1200000);
     setInterval(() => {

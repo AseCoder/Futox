@@ -11,6 +11,21 @@ module.exports = {
     const member = client.funcs.fetchMember(args[0], msg);
     if (!member) return msg.channel.send(client.global.replies.noMember);
     if (member.user.id === client.user.id) return msg.channel.send('I can\'t ban myself!');
+    const embed = new Discord.RichEmbed()
+      .setTitle(`Are you sure you want to ban ${member.displayName}?`)
+      .setDescription(`Tag: ${member.user.tag}\nNickname: ${member.nickname ? '' : member.nickname}\nID: ${member.user.id}`)
+      .setThumbnail(member.user.displayAvatarURL) 
+      .setFooter('Respond with "Y" for yes, "N" for no.')
+      .setColor(client.colors.botGold)
+    await msg.channel.send(embed);
+    const messages = await msg.channel.awaitMessages(m => m.author.id === msg.author.id, {
+      maxMatches: 1,
+      time: 600000,
+      errors: ['time']
+    });
+    if (messages.size < 1 || messages.first().content.toUpperCase() !== 'Y') {
+      return msg.channel.send('Cancelling ban.');
+    }
     if (member.hasPermission('BAN_MEMBERS')) return msg.channel.send('I can\'t ban them!');
     let reason = args.slice(1).join(' ');
     await msg.guild.member(member.user).ban(reason);

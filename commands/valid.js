@@ -33,6 +33,7 @@ module.exports = {
     if (name.length > 10) {
         usernamePercentage -= (name.length - 10) * 4;
     }
+    //usernamre check end?
     let joinCreate = ((member.joinedTimestamp - member.user.createdTimestamp) > 86400000) ? true : false;
     let avatar = member.user.avatarURL ? true : false;
     let bot = member.user.bot ? true : false;
