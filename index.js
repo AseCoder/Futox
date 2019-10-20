@@ -1,3 +1,4 @@
+// Copyright (c) 2019 AseCoder
 console.log('- Starting FutoX -');
 const dotenv = require('dotenv');
 require('dotenv/config');
