@@ -10,6 +10,10 @@
   "author": "AseCoder",
   "license": "MIT",
   "homepage": "https://github.com/AseCoder/Futox",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AseCoder/Futox"
+  },
   "dependencies": {
     "canvas": "^2.6.0",
     "dblapi.js": "^2.3.0",
