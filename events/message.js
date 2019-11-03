@@ -34,7 +34,7 @@ module.exports = {
         message.content = message.content.split(' ').slice(1).join(' ');
       }
       if (client.commands.has(command)) {
-        const permissions = message.channel.permissionsFor(message.client.user);
+        const permissions = message.channel.permissionsFor(client.user);
         if (!permissions.has('EMBED_LINKS')) return message.channel.send('Missing permission: Embed links!');
         try {
           await client.commands.get(command).execute(message, args, client, Discord);
@@ -44,13 +44,10 @@ module.exports = {
           if (!client.global.locally_hosted) {
             const embed = new Discord.RichEmbed()
               .setTitle(`FutoX ${error.toString()}`)
-              .setDescription(error.stack.replace(/at /g, '\n**at **'))
+              .setDescription(error.stack.replace(/at /g, '\n\n**at **'))
               .setFooter(`In ${message.guild.name} (${message.guild.id}) by ${message.author.tag} (${message.author.id})\nMessage: "${message.content}"`)
               .setColor(client.colors.botGold);
-            client.global.core_devs.map(x => x.id).forEach(async id => {
-              const dev = await client.fetchUser(id);
-              dev.send(embed);
-            });
+            client.channels.get('637933610607050754').send(embed);
           }
         }
       }
