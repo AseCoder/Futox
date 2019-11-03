@@ -7,8 +7,13 @@
     "start": "node ."
   },
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "AseCoder",
+  "license": "MIT",
+  "homepage": "https://github.com/AseCoder/Futox",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AseCoder/Futox"
+  },
   "dependencies": {
     "axios": "^0.19.0",
     "canvas": "^2.6.0",

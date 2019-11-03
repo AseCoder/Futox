@@ -1,3 +1,4 @@
+// Copyright (c) 2019 AseCoder
 module.exports = function (key, guild) {
   let foundRoles = []; // roles which's name includes key in some way
   if (!key) return `extCode: noQuery`; // if no role was searched, return early
