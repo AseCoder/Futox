@@ -2,10 +2,12 @@ module.exports = {
   run: async (client, Discord, message) => {
     if (!message.guild || (message.author.bot && message.author.id !== "542971464740241419") || (!client.global.core_devs.map(x => x.id).includes(message.author.id) && client.user.id === '626825158145081352')) return;
     const d = client.global.db.guilds[message.guild.id];
-    if (d.mutes.map(x => x.id).includes(message.author.id)) {
+    if (d.mutes.find(x => x.id === message.author.id) && d.mutes.find(x => x.id === message.author.id).timestamp > Date.now()) {
       message.delete();
       return message.reply(`you are muted!`).then(m => m.delete(2500));
-    }
+    } else if (d.mutes.find(x => x.id === message.author.id) && d.mutes.find(x => x.id === message.author.id).timestamp <= Date.now()) {
+      d.mutes.splice(d.mutes.indexOf(d.mutes.find(x => x.id === message.author.id)), 1);
+    } 
     const args = message.content.split(' ').slice(1);
 
     if (d.channels.swear_detection && d.swear_detection) {
