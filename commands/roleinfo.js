@@ -14,16 +14,11 @@ module.exports = {
             .setColor(client.colors.botGold)
           return msg.channel.send(embed);
         }
-        let creationDiff = new Date(role.createdTimestamp - role.guild.createdTimestamp);
-        let creationDiffStr = '';
-        if ((creationDiff.getFullYear() - 1970) > 0) creationDiffStr += (creationDiff.getFullYear() - 1970) + ' years, ';
-        if (creationDiff.getMonth() > 0) creationDiffStr += creationDiff.getMonth() + ' months, ';
-        if (creationDiff.getDate() > 0) creationDiffStr += creationDiff.getDate() + ' days, ';
-        if (creationDiff.getHours() > 0) creationDiffStr += creationDiff.getHours() + ' hours';
         const embed = new Discord.RichEmbed()
             .setTitle(`${role.name} Info:`)
-            .setDescription(`ID: ${role.id}\nColor: ${role.hexColor.toUpperCase()}\nCreated: ${role.createdAt}\nRole Holders: ${role.members.size}\nPosition: ${role.calculatedPosition}\nRole - Guild Creation Diff: ${creationDiffStr}`)
+            .setDescription(`:small_orange_diamond: Role ID: ${role.id}\n:small_orange_color: Role Color: ${role.hexColor.toUpperCase()}\n:small_orange_diamond: Role Created: ${client.npm.moment(role.createdAt).format('D.M.Y')}\n:small_orange_diamond: Role Members: ${role.members.size}\n:small_orange_position: Position: ${role.calculatedPosition} (from bottom)`)
             .setColor(role.hexColor)
+	    .setFooter('All dates are in EU format.')
         msg.channel.send(embed);
     },
 };
