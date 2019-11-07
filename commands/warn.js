@@ -4,11 +4,18 @@ module.exports = {
   description: 'Warn this user. Warnings expire after 10 days.',
   category: 'punishing',
   async execute(msg, args, client, Discord) {
-    if (!msg.member.hasPermission('KICK_MEMBERS', true, true)) return msg.channel.send(client.global.replies.notAllowed);
     if (!args[0]) return client.funcs.incorrectUsage(msg.channel, msg.content.split(' ')[0], client);
-    var member = client.funcs.fetchMember(args[0], msg);
+    const member = client.funcs.fetchMember(args[0], msg);
     if (!member) return msg.channel.send(client.global.replies.noMember);
-    if (member.hasPermission('KICK_MEMBERS', true, true)) return msg.channel.send('I can\'t warn them.');
+    if (member.user.id === client.user.id) return msg.channel.send('I can\'t warn myself!');
+    const canPunish = client.funcs.canPunish({
+      client,
+      guildId: msg.guild.id,
+      punishmentType: 'WARN',
+      punisherMember: msg.member,
+      punishedMember: member,
+    });
+    if (!canPunish.result) return msg.channel.send(canPunish.errorMessage);
     client.global.db.guilds[msg.guild.id].warnings.push({
       id: member.user.id,
       timestamp: Date.now() + 864000000,

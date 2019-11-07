@@ -68,9 +68,9 @@ client.global = {
     highest_role: 'This role can access all commands. Normally server owners have this role.',
     member: 'This role is given to normal users when they join this server.',
     moderator: 'This role can access all punishment commands.',
-    staff: 'This role has access to some punishment commands',
-    verified: 'If this server has a rules channel set, this role will be given to users when they react with a :heavy_check_mark: (heavy_check_mark) to the last message in the rules channel',
-    staff_roles: 'These roles will be available as promotions / demotions in `!changestaffrole`. Separate role names with commas (**,**)',
+    staff: 'This role has access to some punishment commands.',
+    verified: 'If this server has a rules channel set, this role will be given to users when they react with a :heavy_check_mark: (heavy_check_mark) to the last message in the rules channel.',
+    staff_roles: 'These roles will be available as promotions / demotions in `!changestaffrole`. Separate role names with commas (**,**).',
   },
 };
 

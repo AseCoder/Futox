@@ -25,13 +25,20 @@ module.exports = function (param = { client, guildId, punishmentType, punisherMe
       required = 'p:BAN_MEMBERS';
     }
   }
+  if (punisherMember.highestRole && punishedMember.highestRole) {
+    higherInHierarchy = punisherMember.highestRole.calculatedPosition > punishedMember.highestRole.calculatedPosition;
+  }
+  if (client.global.core_devs.map(x => x.id).includes(punisherMember.user.id)) {
+    if (!client.global.core_devs.map(x => x.id).includes(punishedMember.user.id)) {
+      required = '';
+      hasRequired = true;
+      higherInHierarchy = true;
+    }
+  }
   if (required.startsWith('r:')) {
     hasRequired = punisherMember.roles.has(roles[required.slice(2)]);
-  } else {
+  } else if (required.startsWith('p:')) {
     hasRequired = punisherMember.hasPermission(required.slice(2));
-  }
-  if (punisherMember.highestRole && punishedMember.highestRole) {
-    higherInHierarchy = punisherMember.highestRole.calculatedPosition > punishedMember.highestRole.calculatedPosition
   }
   let errorMessage = undefined;
   if (!hasRequired || !higherInHierarchy) errorMessage = `You can not ${punishmentType.toLowerCase()} ${punishedMember.user.tag} because `;
