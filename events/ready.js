@@ -38,6 +38,7 @@ module.exports = {
     if (futox.user.id === '626825158145081352') {
       await futox.user.setActivity(`outdated bots | 🍾`, { type: 'WATCHING' });
       await futox.user.setStatus('online');
+      futox.colors.botGold = '#ae45f5';
     } else {
       await futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
       await futox.user.setStatus('idle');
