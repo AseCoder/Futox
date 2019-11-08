@@ -67,7 +67,7 @@ client.global = {
 };
 
 client.config = {
-  token: process.env.FUTOX_TOKEN,
+  token: process.env.TOKEN,
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
   client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
