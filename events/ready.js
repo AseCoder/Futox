@@ -1,8 +1,6 @@
 module.exports = {
   run: async (param) => {
-    const { futox, Discord, dbl } = param;
-    const path = require('path');
-    const fs = futox.npm.fs;
+    const { futox } = param;
     const remoteGuildData = await futox.funcs.dbget('guilds', null, futox);
     remoteGuildData.forEach(guildData => {
       futox.global.db.guilds[guildData.id] = guildData.d;
@@ -50,6 +48,11 @@ module.exports = {
     let pastDbJSON = JSON.stringify(futox.global.db);
     futox.unsaved_db = false;
     setInterval(async () => {
+      if (pastDbJSON !== JSON.stringify(futox.global.db)) { 
+        futox.global.dbwrite.unsavedChanges = true;
+      } else {
+        futox.global.dbwrite.unsavedChanges = false;
+      }
       futox.global.pings.push(futox.ping);
       if (futox.global.pings.length > 50) futox.global.pings.shift();
     }, 30000);
@@ -76,8 +79,7 @@ module.exports = {
       }
     }, 1200000);
     setInterval(() => {
-      futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
-      //dbl.postStats(futox.guilds.size);
+      if (futox.user.id !== '626825158145081352') futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
     }, 1800000);
   },
 };

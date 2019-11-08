@@ -38,19 +38,11 @@ client.global = {
     },
   ],
   replies: {
-    notAllowedFunc: (perms) => {
-      let output = 'You are not allowed to do that!';
-      perms = perms.forEach(x => x = x.toUpperCase().replace(new RegExp(' '), '_'));
-      const permissions = new Discord.Permissions(null, perms);
-      return permissions.toArray();
-    },
     notAllowed: 'You are not allowed to do that!',
     noMember: 'I could not obtain The User.',
-    fiveMinutes: 'Please wait 5 minutes for the server information to refresh.',
   },
   db: {
     guilds: {},
-    musix_guilds: {},
     specs: {},
   },
   channelDescs: {
@@ -75,7 +67,7 @@ client.global = {
 };
 
 client.config = {
-  token: process.env.TOKEN,
+  token: process.env.FUTOX_TOKEN,
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
   client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
@@ -113,11 +105,11 @@ client.on('guildMemberAdd', (member) => {
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   require('./events/messageUpdate.js').run({ futox: client, Discord, newMessage });
 });
-/*
+
 client.on('presenceUpdate', async (oldMember, newMember) => {
   require('./events/presenceUpdate.js').run({ futox: client, Discord, oldMember, newMember });
 });
-*/
+
 client.on('roleDelete', async (role) => {
   require('./events/roleDelete.js').run({ futox: client, role, Discord });
 });
@@ -140,7 +132,7 @@ client.on('guildDelete', async (guild) => {
 });
 
 client.on('ready', async () => {
-  require('./events/ready.js').run({ futox: client, Discord, futoxdbl: dbl });
+  require('./events/ready.js').run({ futox: client, });
 });
 
 client.on('message', async (message) => {
@@ -148,7 +140,7 @@ client.on('message', async (message) => {
 });
 
 dbl.on('posted', () => {
-  console.log('FutoX server count posted!');
+  console.log('- FutoX server count posted -');
 })
 
 dbl.on('error', error => {
@@ -162,4 +154,4 @@ fs.readdirSync('./funcs').forEach(filename => {
 client.funcs.incorrectUsage(client);
 console.log('- FutoX Funcs Loaded -');
 
-client.login(client.config.token).catch(err => { console.log('- Futox Failed To Login -'); });
+client.login(client.config.token).catch(() => { console.log('- Futox Failed To Login -'); });
