@@ -10,6 +10,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setTitle(`${client.global.db.guilds[msg.guild.id].prefix}${command.name} ${command.usage}`)
         .setDescription(command.description)
+      	.setFooter('[User] can be a user\'s username, nickname, mention or ID.')
         .setColor(client.colors.botGold)
       msg.channel.send(embed);
     } else {
@@ -28,7 +29,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setTitle(`${client.user.username} help:`)
         .setDescription(commands)
-        .setFooter(`"${client.global.db.guilds[msg.guild.id].prefix}help [command]" to see more information about a command. [User]`)
+        .setFooter(`"${client.global.db.guilds[msg.guild.id].prefix}help [command]" to see more information about a command.`)
         .setColor(client.colors.botGold)
       msg.channel.send(embed);
     }
