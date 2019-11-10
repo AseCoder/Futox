@@ -10,6 +10,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setTitle(`${client.global.db.guilds[msg.guild.id].prefix}${command.name} ${command.usage}`)
         .setDescription(command.description)
+      	.setFooter('[User] can be a user\'s username, nickname, mention or ID.')
         .setColor(client.colors.botGold)
       msg.channel.send(embed);
     } else {
