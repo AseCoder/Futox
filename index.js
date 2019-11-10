@@ -68,7 +68,7 @@ client.global = {
 
 client.config = {
   token: process.env.TOKEN,
-  activity_url: 'http://localhost:5000/activity',
+  activity_url: 'http://localhost:5000/api/activity',
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
   client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
