@@ -38,21 +38,53 @@ module.exports = {
       if (client.commands.has(command)) {
         const permissions = message.channel.permissionsFor(client.user);
         if (!permissions.has('EMBED_LINKS')) return message.channel.send('Missing permission: Embed links!');
+        const col = message.channel.createMessageCollector(m => m.author.id === client.user.id, {
+          time: 3000,
+        });
+        let emittedError = null;
         try {
           await client.commands.get(command).execute(message, args, client, Discord);
         } catch (error) {
+          emittedError = error.toString();
           console.log(error);
-          message.channel.send('An error occured while completing that command. The core developers will fix this as soon as they can.');
-          if (!client.global.locally_hosted) {
-            const embed = new Discord.RichEmbed()
-              .setTitle(`FutoX ${error.toString()}`)
-              .setDescription(error.stack.replace(/at /g, '\n\n**at **'))
-              .setFooter(`In ${message.guild.name} (${message.guild.id}) by ${message.author.tag} (${message.author.id})\nMessage: "${message.content}"`)
-              .setColor(client.colors.botGold);
-            client.channels.get('637933610607050754').send(embed);
-          }
-        }
+          await message.channel.send('An error occured while completing that command. The core developers will fix this as soon as they can.');
+          if (!client.global.locally_hosted) errorEmbed(error, message, client, Discord);
+        } finally {
+          const clientResponses = [];
+          col.on('collect', m => clientResponses.push(m.content ? m.content : '[Embed]'));
+          col.on('end', () => {
+            client.npm.axios.post(client.config.activity_url, {
+              command,
+              args,
+              responses: clientResponses,
+              error: emittedError,
+              api_key: process.env.API_KEY,
+            }).then((res) => {
+              console.log(`statusCode: ${res.statusCode}`)
+            }).catch((error) => {
+              console.error(error)
+            })
+          });
+        } 
       }
     }
   },
 };
+
+async function errorEmbed(error, message, client, Discord) {
+  const errorsChannel = client.channels.get('643110492126314509');
+  const embed = new Discord.RichEmbed()
+    .setTitle(`FutoX ${error.toString()}`)
+    .setDescription(error.stack ? error.stack.replace(/at /g, '\n**at **') : '[No Stack]')
+    .addField('\u200b', `In ${message.guild.name} (${message.guild.id})\nBy ${message.author.tag} (${message.author.id})\nMessage: ${message.content}\nQuick Reply: Send a message. <c> will be replaced with your tag, 90 seconds time to write quick reply, "n" will cancel Quick Reply.`)
+    .setColor(client.colors.botGold);
+  await errorsChannel.send(embed);
+  const quickReply = await errorsChannel.awaitMessages(m => client.global.core_devs.map(x => x.id).includes(m.author.id), {
+    maxMatches: 1,
+    time: 90000,
+    errors: ['time'],
+  });
+  if (quickReply.size > 0 && quickReply.first().content !== 'n') {
+    message.channel.send('**Reply from FutoX Developer:** ' + quickReply.first().content.replace(/<c>/g, quickReply.first().author.tag));
+  }
+}

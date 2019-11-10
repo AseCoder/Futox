@@ -67,7 +67,8 @@ client.global = {
 };
 
 client.config = {
-  token: process.env.FUTOX_TOKEN,
+  token: process.env.TOKEN,
+  activity_url: 'http://localhost:5000/activity',
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
   client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
@@ -84,6 +85,7 @@ client.npm = {
   moment: require('moment'),
   fs: require('fs'),
   canvas: require('canvas'),
+  axios: require('axios'),
 };
 client.commands = new Discord.Collection();
 const commandNames = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));

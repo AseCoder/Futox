@@ -28,7 +28,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setTitle(`${client.user.username} help:`)
         .setDescription(commands)
-        .setFooter(`"${client.global.db.guilds[msg.guild.id].prefix}help [command]" to see more information about a command. [User]`)
+        .setFooter(`"${client.global.db.guilds[msg.guild.id].prefix}help [command]" to see more information about a command. Any usage of these commands will be stored anonymously.`)
         .setColor(client.colors.botGold)
       msg.channel.send(embed);
     }
