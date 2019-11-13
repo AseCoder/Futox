@@ -4,7 +4,8 @@ module.exports = {
   description: 'Change this server\'s role preferences',
   category: 'utility',
   async execute(msg, args, client, Discord) {
-    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the role preferences.` || msg.author.id === '360363051792203779' || msg.author.id === '384002606621655040');
+    const permissions = msg.channel.permissionsFor(msg.author);
+    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the role preferences.` || permissions.has('ADMINISTRATOR') || msg.author.id === '360363051792203779' || msg.author.id === '384002606621655040');
     const d = client.global.db.guilds[msg.guild.id];
     if (!args[0]) {
       const embed = new Discord.RichEmbed()
