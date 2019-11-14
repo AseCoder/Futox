@@ -4,8 +4,8 @@ module.exports = {
   description: 'Change this server\'s channel preferences',
   category: 'utility',
   async execute(msg, args, client, Discord) {
-    const permissions = msg.channel.permissionsFor(msg.author);
-    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the channel preferences.` || permissions.has('ADMINISTRATOR') || msg.author.id === '360363051792203779' || msg.author.id === '384002606621655040');
+    const permissions = msg.member.permissions;
+    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role) && !permissions.hasPermission('ADMINISTRATOR') || !client.global.core_devs.map(x => x.id).includes(msg.author.id)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role or Administrator permission can change the channel preferences.`);
     const d = client.global.db.guilds[msg.guild.id];
     if (!args[0]) {
       const embed = new Discord.RichEmbed()
