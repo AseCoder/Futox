@@ -1,10 +1,11 @@
 module.exports = {
-	name: 'channels',
-	usage: '[channel type] [channel]',
-	description: 'Change this server\'s channel preferences',
-	category: 'utility',
-	async execute(msg, args, client, Discord) {
-    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the channel preferences.`);
+  name: 'channels',
+  usage: '[channel type] [channel]',
+  description: 'Change this server\'s channel preferences',
+  category: 'utility',
+  async execute(msg, args, client, Discord) {
+    const permissions = msg.channel.permissionsFor(msg.author);
+    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the channel preferences.` || permissions.has('ADMINISTRATOR') || msg.author.id === '360363051792203779' || msg.author.id === '384002606621655040');
     const d = client.global.db.guilds[msg.guild.id];
     if (!args[0]) {
       const embed = new Discord.RichEmbed()
@@ -30,7 +31,7 @@ module.exports = {
         }
         delete client.global.db.guilds[msg.guild.id].channels[args[1]];
         return msg.channel.send(`Sucessfully removed channel preference \`${args[1]}\`.`);
-      } 
+      }
       if (!Object.keys(client.global.channelDescs).includes(args[0])) {
         const embed = new Discord.RichEmbed()
           .setTitle('Available channel types:')

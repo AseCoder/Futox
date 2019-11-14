@@ -1,10 +1,11 @@
 module.exports = {
-	name: 'roles',
-	usage: '[role type] [role name]',
-	description: 'Change this server\'s role preferences',
-	category: 'utility',
-	async execute(msg, args, client, Discord) {
-    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the role preferences.`);
+  name: 'roles',
+  usage: '[role type] [role name]',
+  description: 'Change this server\'s role preferences',
+  category: 'utility',
+  async execute(msg, args, client, Discord) {
+    const permissions = msg.channel.permissionsFor(msg.author);
+    if (!msg.member.roles.has(client.global.db.guilds[msg.guild.id].roles.highest_role)) return msg.channel.send(`Only people with the **${msg.guild.roles.get(client.global.db.guilds[msg.guild.id].roles.highest_role).name}** role can change the role preferences.` || permissions.has('ADMINISTRATOR') || msg.author.id === '360363051792203779' || msg.author.id === '384002606621655040');
     const d = client.global.db.guilds[msg.guild.id];
     if (!args[0]) {
       const embed = new Discord.RichEmbed()
@@ -17,8 +18,8 @@ module.exports = {
         const role = d.roles[Object.keys(client.global.roleDescs)[i]];
         if (typeof role === 'object') {
           embed.addField(Object.keys(client.global.roleDescs)[i] + ':', `${role ? `Roles set: <@&${role.join('>, <@&')}>.\n` : 'No role set.\n'}${Object.values(client.global.roleDescs)[i]}`, true);
-         } else {
-           embed.addField(Object.keys(client.global.roleDescs)[i] + ':', `${role ? `Role set: <@&${role}>.\n` : 'No role set.\n'}${Object.values(client.global.roleDescs)[i]}`, true);
+        } else {
+          embed.addField(Object.keys(client.global.roleDescs)[i] + ':', `${role ? `Role set: <@&${role}>.\n` : 'No role set.\n'}${Object.values(client.global.roleDescs)[i]}`, true);
         }
       }
       msg.channel.send(embed);
@@ -37,7 +38,7 @@ module.exports = {
         }
         delete client.global.db.guilds[msg.guild.id].roles[args[1]];
         return msg.channel.send(`Sucessfully removed role preference \`${args[1]}\`.`);
-      } 
+      }
       if (!Object.keys(client.global.roleDescs).includes(args[0])) {
         const embed = new Discord.RichEmbed()
           .setTitle('Available role types:')
