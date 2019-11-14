@@ -32,6 +32,9 @@ module.exports = {
             .setThumbnail(msg.guild.iconURL);
           return msg.channel.send(embed);
         }
+        if (args[1] === 'highest_role') {
+          return msg.channel.send('This role cannot be removed, as it is vital to the functionality of Futox. You can assing it to be a different role, though.');
+        }
         delete client.global.db.guilds[msg.guild.id].roles[args[1]];
         return msg.channel.send(`Sucessfully removed role preference \`${args[1]}\`.`);
       } 
