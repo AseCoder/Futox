@@ -16,7 +16,7 @@ module.exports = {
         }
         const embed = new Discord.RichEmbed()
             .setTitle(`${role.name} Info:`)
-            .setDescription(`:small_orange_diamond: Role ID: ${role.id}\n:small_orange_color: Role Color: ${role.hexColor.toUpperCase()}\n:small_orange_diamond: Role Created: ${client.npm.moment(role.createdAt).format('D.M.Y')}\n:small_orange_diamond: Role Members: ${role.members.size}\n:small_orange_position: Position: ${role.calculatedPosition} (from bottom)`)
+            .setDescription(`:small_orange_diamond: Role ID: ${role.id}\n:small_orange_diamond: Role Color: ${role.hexColor.toUpperCase()}\n:small_orange_diamond: Role Created: ${client.npm.moment(role.createdAt).format('D.M.Y')}\n:small_orange_diamond: Role Members: ${role.members.size}\n:small_orange_diamond: Position: ${role.calculatedPosition} (from bottom)`)
             .setColor(role.hexColor)
 	    .setFooter('All dates are in EU format.')
         msg.channel.send(embed);
