@@ -68,7 +68,7 @@ client.global = {
 
 client.config = {
   token: process.env.TOKEN,
-  activity_url: 'http://xbots-support.herokuapp.com/activity',
+  activity_url: 'http://xbots-support.herokuapp.com/api/activity',
 };
 if (process.env.LOCALLYHOSTED !== undefined) {
   client.global.locally_hosted = process.env.LOCALLYHOSTED == 'true' ? true : false;
