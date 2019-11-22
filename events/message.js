@@ -43,6 +43,7 @@ module.exports = {
         });
         let emittedError = null;
         try {
+          client.commands.get(command).uses++;
           await client.commands.get(command).execute(message, args, client, Discord);
         } catch (error) {
           emittedError = error.toString();
@@ -61,9 +62,9 @@ module.exports = {
               api_key: process.env.API_KEY,
             }).then((res) => {
               console.log(`statusCode: ${res.statusCode}`)
-            }).catch((error) => {
-              console.error(error)
-            })
+            }).catch(() => {
+              console.log('- Failed To Send HTTP POST -');
+            });
           });
         } 
       }
@@ -75,7 +76,7 @@ async function errorEmbed(error, message, client, Discord) {
   const errorsChannel = client.channels.get('643110492126314509');
   const embed = new Discord.RichEmbed()
     .setTitle(`FutoX ${error.toString()}`)
-    .setDescription(error.stack ? error.stack.replace(/at /g, '\n**at **') : '[No Stack]')
+    .setDescription(error.stack ? '```md\n' + error.stack.replace(/at /g, '\nat ') + '\n```' : '`[No Stack]`')
     .addField('\u200b', `In ${message.guild.name} (${message.guild.id})\nBy ${message.author.tag} (${message.author.id})\nMessage: ${message.content}\nQuick Reply: Send a message. <c> will be replaced with your tag, 90 seconds time to write quick reply, "n" will cancel Quick Reply.`)
     .setColor(client.colors.botGold);
   await errorsChannel.send(embed);
