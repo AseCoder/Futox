@@ -6,6 +6,7 @@ module.exports = {
       futox.global.db.guilds[guildData.id] = guildData.d;
       if (futox.user.id === '626825158145081352') {
         futox.global.db.guilds[guildData.id].prefix = '*';
+        futox.config.activity_url = 'http://localhost:5000/api/activity';
       }
 
       // remove mutes
