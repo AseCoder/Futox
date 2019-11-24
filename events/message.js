@@ -76,16 +76,31 @@ async function errorEmbed(error, message, client, Discord) {
   const errorsChannel = client.channels.get('643110492126314509');
   const embed = new Discord.RichEmbed()
     .setTitle(`FutoX ${error.toString()}`)
-    .setDescription(error.stack ? '```md\n' + error.stack.replace(/at /g, '\nat ') + '\n```' : '`[No Stack]`')
-    .addField('\u200b', `In ${message.guild.name} (${message.guild.id})\nBy ${message.author.tag} (${message.author.id})\nMessage: ${message.content}\nQuick Reply: Send a message. <c> will be replaced with your tag, 90 seconds time to write quick reply, "n" will cancel Quick Reply.`)
+    .setDescription(error.stack ? '```\n' + error.stack.replace(/at /g, '\nat ') + '\n```' : '`[No Stack]`')
+    .addField('Guild', `${message.guild.name} \`(${message.guild.id})\``)
+    .addField('Channel', `#${message.channel.name} \`(${message.channel.id})\``)
+    .addField('User', `${message.author.tag} \`(${message.author.id})\``)
+    .addField('Message', `${message.content} \`(${message.id})\``)
+    .addField(':white_check_mark: Quick Reply', `Respond within 90 seconds.\n\`<c>\` will be replaced with your tag.\nResponding with \`n\` will cancel Quick Reply.`)
     .setColor(client.colors.botGold);
-  await errorsChannel.send(embed);
-  const quickReply = await errorsChannel.awaitMessages(m => client.global.core_devs.map(x => x.id).includes(m.author.id), {
+  const errorEmbedMessage = await errorsChannel.send(embed);
+  errorsChannel.awaitMessages(m => client.global.core_devs.map(x => x.id).includes(m.author.id), {
     maxMatches: 1,
     time: 90000,
     errors: ['time'],
+  }).then(quickReplies => {
+    if (quickReplies.size > 0 && quickReplies.first().content.toLowerCase() !== 'n') {
+      quickReplies.first().delete(5000);
+      message.channel.send('**Reply from FutoX Developer:** ' + quickReplies.first().content.replace(/<c>/g, quickReplies.first().author.tag));
+      embed.fields[embed.fields.length - 1].name = ':x: Quick Reply **ANSWERED**';
+      errorEmbedMessage.edit(embed);
+    } else if (quickReplies.size > 0 && quickReplies.first().content.toLowerCase() === 'n') {
+      quickReplies.first().delete(5000);
+      embed.fields[embed.fields.length - 1].name = ':x: Quick Reply **DENIED**';
+      errorEmbedMessage.edit(embed);
+    } 
+  }).catch(() => {
+    embed.fields[embed.fields.length - 1].name = ':x: Quick Reply **TIMED OUT**';
+    errorEmbedMessage.edit(embed);
   });
-  if (quickReply.size > 0 && quickReply.first().content !== 'n') {
-    message.channel.send('**Reply from FutoX Developer:** ' + quickReply.first().content.replace(/<c>/g, quickReply.first().author.tag));
-  }
 }
