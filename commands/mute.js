@@ -4,7 +4,6 @@ module.exports = {
   description: 'Temporarily mute a user',
   category: 'punishing',
   async execute(msg, args, client, Discord) {
-    if (!msg.guild.me.hasPermission('MUTE_MEMBERS', true, true)) return msg.channel.send('Missing permission: Mute members!');
     if (!args[1]) return client.funcs.incorrectUsage(msg.channel, msg.content.split(' ')[0], client);
     const member = client.funcs.fetchMember(args[0], msg);
     if (!member) return msg.channel.send(client.global.replies.noMember);
@@ -21,7 +20,7 @@ module.exports = {
     if (d.mutes.map(x => x.id).includes(member.user.id)) return msg.channel.send('That user is already muted. They can\'t have 2 mutes simultaneously.');
     const time = client.npm.ms(args[1]);
     if (isNaN(time)) return msg.channel.send('Incorrect time format, try one of the following: 10m, 5h, 1d');
-    if (time > 31556926000) return msg.channel.send('You can only mute someone for 1 year.');
+    if (time > 15778476000) return msg.channel.send('You can only mute someone for 6 months.');
     client.global.db.guilds[msg.guild.id].mutes.push({
       id: member.user.id,
       timestamp: Date.now() + time,
@@ -47,7 +46,11 @@ module.exports = {
         .addField(`:small_orange_diamond: Muted By`, msg.member.toString())
         .addField(`:small_orange_diamond: Reason`, reason ? reason : 'No reason specified')
         .setColor(client.colors.botGold);
-      const embedMessage = await client.channels.get(d.channels.punishments).send(embed).catch(err => {});
+      const embedMessage = await client.channels.get(d.channels.punishments).send(embed).catch(err => { });
+      if (embedMessage) {
+        client.global.db.guilds[msg.guild.id].mutes[d.mutes.length - 1].embedId = embedMessage.id;
+        client.global.db.guilds[msg.guild.id].mutes[d.mutes.length - 1].embedChannelId = embedMessage.channel.id;
+      }
       embed
         .setTitle('Temporary mute **EXPIRED**')
         .setColor('#000000');

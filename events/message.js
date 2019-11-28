@@ -62,8 +62,11 @@ module.exports = {
               api_key: process.env.API_KEY,
             }).then((res) => {
               console.log(`statusCode: ${res.statusCode}`)
-            }).catch(() => {
-              console.log('- Failed To Send HTTP POST -');
+            }).catch((error) => {
+              console.log(`- Failed To Send HTTP POST, Error Code ${error.response.status}, Header -`);
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
             });
           });
         } 

@@ -6,7 +6,7 @@ module.exports = {
       futox.global.db.guilds[guildData.id] = guildData.d;
       if (futox.user.id === '626825158145081352') {
         futox.global.db.guilds[guildData.id].prefix = '*';
-        futox.config.activity_url = 'http://localhost:5000/api/activity';
+        //futox.config.activity_url = 'http://localhost:5000/api/activity';
       }
 
       // remove mutes
@@ -48,39 +48,41 @@ module.exports = {
 
     let pastDbJSON = JSON.stringify(futox.global.db);
     futox.unsaved_db = false;
-    setInterval(async () => {
-      if (pastDbJSON !== JSON.stringify(futox.global.db)) { 
-        futox.global.dbwrite.unsavedChanges = true;
-      } else {
-        futox.global.dbwrite.unsavedChanges = false;
-      }
-      futox.global.pings.push(futox.ping);
-      if (futox.global.pings.length > 50) futox.global.pings.shift();
-    }, 30000);
-    futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000
-    setInterval(async () => {
-      if (pastDbJSON !== JSON.stringify(futox.global.db)) {
-        pastDbJSON = JSON.stringify(futox.global.db);
-        futox.global.dbwrite.unsavedChanges = true;
-      } else {
-        futox.global.dbwrite.unsavedChanges = false;
-      }
-      futox.global.dbwrite.lastAttempt.timestamp = Date.now();
-      futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000;
-      if (futox.global.dbwrite.unsavedChanges) {
-        futox.global.dbwrite.lastAttempt.success = true;
-        futox.guilds.forEach(guild => {
-          futox.db.collection('guilds').doc(guild.id).set(futox.global.db.guilds[guild.id]);
-        });
-        for (let i = 0; i < Object.keys(futox.global.db.specs).length; i++) {
-          futox.db.collection('specs').doc(Object.keys(futox.global.db.specs)[i]).set(Object.values(futox.global.db.specs)[i]);
+    if (futox.user.id !== '626825158145081352') {
+      setInterval(async () => {
+        if (pastDbJSON !== JSON.stringify(futox.global.db)) {
+          futox.global.dbwrite.unsavedChanges = true;
+        } else {
+          futox.global.dbwrite.unsavedChanges = false;
         }
-      } else {
-        futox.global.dbwrite.lastAttempt.success = false;
-      }
-    }, 1200000);
-    setInterval(() => {
-      if (futox.user.id !== '626825158145081352') futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
-    }, 1800000);
+        futox.global.pings.push(futox.ping);
+        if (futox.global.pings.length > 50) futox.global.pings.shift();
+      }, 30000);
+      futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000;
+      setInterval(async () => {
+        if (pastDbJSON !== JSON.stringify(futox.global.db)) {
+          pastDbJSON = JSON.stringify(futox.global.db);
+          futox.global.dbwrite.unsavedChanges = true;
+        } else {
+          futox.global.dbwrite.unsavedChanges = false;
+        }
+        futox.global.dbwrite.lastAttempt.timestamp = Date.now();
+        futox.global.dbwrite.nextAttemptTimestamp = Date.now() + 1200000;
+        if (futox.global.dbwrite.unsavedChanges) {
+          futox.global.dbwrite.lastAttempt.success = true;
+          futox.guilds.forEach(guild => {
+            futox.db.collection('guilds').doc(guild.id).set(futox.global.db.guilds[guild.id]);
+          });
+          for (let i = 0; i < Object.keys(futox.global.db.specs).length; i++) {
+            futox.db.collection('specs').doc(Object.keys(futox.global.db.specs)[i]).set(Object.values(futox.global.db.specs)[i]);
+          }
+        } else {
+          futox.global.dbwrite.lastAttempt.success = false;
+        }
+      }, 1200000);
+      setInterval(() => {
+        futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
+      }, 1800000);
+    }
   },
 };
