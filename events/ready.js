@@ -39,7 +39,7 @@ module.exports = {
       await futox.user.setStatus('online');
       futox.colors.botGold = '#ae45f5';
     } else {
-      await futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
+      await futox.user.setActivity(`${futox.guilds.size} servers | 🐋 | @FutoX help`, { type: 'WATCHING' });
       await futox.user.setStatus('idle');
     }
     console.log('- FutoX Activity Set -');
@@ -81,7 +81,7 @@ module.exports = {
         }
       }, 1200000);
       setInterval(() => {
-        futox.user.setActivity(`${futox.guilds.size} servers | 🐋`, { type: 'WATCHING' });
+        futox.user.setActivity(`${futox.guilds.size} servers | 🐋 | @FutoX help`, { type: 'WATCHING' });
       }, 1800000);
     }
   },
