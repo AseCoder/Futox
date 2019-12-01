@@ -15,6 +15,9 @@ module.exports = {
         .setThumbnail(msg.guild.iconURL)
         .setFooter('You can change these preferences by adding some words to this command: "!roles [role type] [role name]"\nYou can remove role preferences with "!roles remove [role type]"');
       for (let i = 0; i < Object.keys(client.global.roleDescs).length; i++) {
+        if (i % 2 === 0 && i !== 0) {
+          embed.addBlankField(false);
+        }
         const role = d.roles[Object.keys(client.global.roleDescs)[i]];
         if (typeof role === 'object') {
           embed.addField(Object.keys(client.global.roleDescs)[i] + ':', `${role ? `Roles set: <@&${role.join('>, <@&')}>.\n` : 'No role set.\n'}${Object.values(client.global.roleDescs)[i]}`, true);

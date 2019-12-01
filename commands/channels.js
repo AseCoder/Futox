@@ -15,6 +15,9 @@ module.exports = {
         .setThumbnail(msg.guild.iconURL)
         .setFooter('You can change these preferences by adding some words to this command: "!channels [channel type] [channel]"\nYou can remove channel preferences with "!channels remove [channel type]"');
       for (let i = 0; i < Object.keys(client.global.channelDescs).length; i++) {
+        if (i % 2 === 0 && i !== 0) {
+          embed.addBlankField(false);
+        }
         const channel = d.channels[Object.keys(client.global.channelDescs)[i]];
         embed.addField(Object.keys(client.global.channelDescs)[i] + ':', `${channel ? `Channel set: <#${channel}>.\n` : 'No channel set.\n'}${Object.values(client.global.channelDescs)[i]}`, true);
       }

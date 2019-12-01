@@ -65,7 +65,6 @@ client.global = {
     staff_roles: 'These roles will be available as promotions / demotions in `!changestaffrole`. Separate role names with commas (**,**).',
   },
 };
-
 client.config = {
   token: process.env.TOKEN,
   activity_url: 'http://xbots-support.herokuapp.com/api/activity',
