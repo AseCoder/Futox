@@ -1,7 +1,7 @@
 {
   "name": "futox",
   "version": "1.0.0",
-  "description": "",
+  "description": "the most australian discord bot",
   "main": "index.js",
   "scripts": {
     "start": "node ."

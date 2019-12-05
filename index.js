@@ -1,19 +1,19 @@
 const Discord = require('discord.js');
-global.Client = new Discord.Client();
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const FirebaseAdmin = require('firebase-admin');
 const firestoreServiceAccount = require('./serviceAccount.json');
-require('dotenv/config')
+global.Client = new Discord.Client();
+require('dotenv/config');
 
 // Initialize Database
 FirebaseAdmin.initializeApp({
-  credential: FirebaseAdmin.credential.cert(firestoreServiceAccount)
+  credential: FirebaseAdmin.credential.cert(firestoreServiceAccount),
 });
 
 // Add properties to Client
-Object.assign(global.Client, {
+Object.assign(global, {
   db: FirebaseAdmin.firestore(),
   coreDevs: {
     guild: '583597555095437312',
@@ -35,7 +35,7 @@ Object.assign(global.Client, {
     FirebaseAdmin,
     moment,
   },
-  funcs: {},
+  Embed: Discord.MessageEmbed,
 });
 
 // Initialize Event Modules
@@ -48,14 +48,14 @@ fs.readdir(path.join(__dirname, 'events'), (err, files) => {
 // Initialize Command Modules
 fs.readdir(path.join(__dirname, 'commands'), (err, files) => {
   files.forEach(file => {
-    global.Client.commands.set(file.slice(0, -3), require(`./commands/${file}`))
+    global.commands.set(file.slice(0, -3), require(`./commands/${file}`))
   });
 });
 
 // Initialize Global Functions
 fs.readdir(path.join(__dirname, 'functions'), (err, files) => {
   files.forEach(file => {
-    global.Client.funcs[file.slice(0, -3)] = require(`./functions/${file}`).run;
+    global[file.slice(0, -3)] = require(`./functions/${file}`).run;
   });
 });
 
