@@ -5,7 +5,7 @@ module.exports = {
     if (!d.channels.rules || !d.channels.swear_detection || !d.roles.verified) return;
     if (event.d.user_id === futox.user.id) return;
     if (event.d.channel_id !== d.channels.rules) return;
-    if (event.d.emoji.name !== '✔') return;
+    if (event.d.emoji.name !== '✅') return;
     if (event.t === 'MESSAGE_REACTION_ADD') {
       const embed = new Discord.RichEmbed()
         .setTitle('**Someone agreed with the rules!**')
