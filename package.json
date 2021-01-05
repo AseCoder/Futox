@@ -15,7 +15,7 @@
     "url": "https://github.com/AseCoder/Futox"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "canvas": "^2.6.0",
     "dblapi.js": "^2.3.0",
     "discord.js": "^11.5.1",
